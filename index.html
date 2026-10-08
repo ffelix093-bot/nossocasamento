@@ -397,7 +397,7 @@
         });
     }
 
-    // --- LÓGICA DE PARCELAMENTO: ENTRADA E SALDO ---
+    // --- LÓGICA DE PARCELAMENTO: ENTRADA FIXA SEM NÚMEROS ---
     function generateInstallments(total, entradaVal, entradaInstCount, saldoInstCount) {
         let arr = [];
         let index = 1;
@@ -408,12 +408,9 @@
             let valPorEntrada = entradaVal / numEntradas;
             
             for (let i = 1; i <= numEntradas; i++) {
-                let numStr = i < 10 ? `0${i}` : i;
-                let titleStr = numEntradas > 1 ? `Entrada ${numStr}/${numEntradas < 10 ? '0'+numEntradas : numEntradas}` : `Entrada`;
-                
                 arr.push({
                     id: index,
-                    title: titleStr,
+                    title: "Entrada", // <- NOME FIXADO AQUI
                     value: valPorEntrada,
                     felipe: valPorEntrada / 2,
                     beatriz: valPorEntrada / 2,
@@ -612,15 +609,12 @@
         document.getElementById('input-sup-name').value = sup.name;
         document.getElementById('input-sup-value').value = sup.total;
         
-        // Puxa o valor da entrada
         let entradaVal = sup.entrada !== undefined ? sup.entrada : 0;
         document.getElementById('input-sup-entrada').value = entradaVal > 0 ? entradaVal : '';
         
-        // Puxa as parcelas da entrada
         let entradaInst = sup.entradaParcelasCount !== undefined ? sup.entradaParcelasCount : 1;
         document.getElementById('input-sup-entrada-inst').value = entradaVal > 0 ? entradaInst : '';
         
-        // Puxa as parcelas do saldo
         let saldoInst = sup.saldoParcelasCount !== undefined ? sup.saldoParcelasCount : sup.installments.length;
         document.getElementById('input-sup-installments').value = saldoInst;
         
