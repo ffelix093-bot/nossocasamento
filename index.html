@@ -132,7 +132,7 @@
             background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
         }
         .modal-overlay.active { display: flex; }
-        .modal { background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px; animation: fadeIn 0.3s ease; }
+        .modal { background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; animation: fadeIn 0.3s ease; }
         .modal h3 { color: var(--dourado); margin-bottom: 15px; font-size: 18px; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--cinza-escuro); }
@@ -307,9 +307,15 @@
                 <label>Valor Total (R$)</label>
                 <input type="number" id="input-sup-value" placeholder="Ex: 5000" step="0.01">
             </div>
-            <div class="input-group">
-                <label>Valor da Entrada (R$) - Opcional</label>
-                <input type="number" id="input-sup-entrada" placeholder="Ex: 1000" step="0.01">
+            <div style="display: flex; gap: 10px; align-items: end; background: #fafafa; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                    <label>Entrada (R$)</label>
+                    <input type="number" id="input-sup-entrada" placeholder="Ex: 1000" step="0.01">
+                </div>
+                <div class="input-group" style="flex: 0.6; margin-bottom: 0;">
+                    <label>Parcelas</label>
+                    <input type="number" id="input-sup-entrada-inst" placeholder="Ex: 2" min="1" max="12">
+                </div>
             </div>
             <div class="input-group">
                 <label>Parcelas do Saldo Restante</label>
@@ -391,31 +397,40 @@
         });
     }
 
-    // --- NOVA LÓGICA DE GERAÇÃO DE PARCELAS ---
-    function generateInstallments(total, entrada, instCount) {
+    // --- LÓGICA DE PARCELAMENTO: ENTRADA E SALDO ---
+    function generateInstallments(total, entradaVal, entradaInstCount, saldoInstCount) {
         let arr = [];
         let index = 1;
         
-        // Se houver valor de entrada, cria a parcela 1 como Entrada
-        if (entrada > 0) {
-            arr.push({
-                id: index,
-                title: `Entrada`,
-                value: entrada,
-                felipe: entrada / 2,
-                beatriz: entrada / 2,
-                status: 'pending'
-            });
-            index++;
+        // Se houver valor de entrada
+        if (entradaVal > 0) {
+            let numEntradas = Math.max(1, entradaInstCount || 1);
+            let valPorEntrada = entradaVal / numEntradas;
+            
+            for (let i = 1; i <= numEntradas; i++) {
+                let numStr = i < 10 ? `0${i}` : i;
+                let titleStr = numEntradas > 1 ? `Entrada ${numStr}/${numEntradas < 10 ? '0'+numEntradas : numEntradas}` : `Entrada`;
+                
+                arr.push({
+                    id: index,
+                    title: titleStr,
+                    value: valPorEntrada,
+                    felipe: valPorEntrada / 2,
+                    beatriz: valPorEntrada / 2,
+                    status: 'pending'
+                });
+                index++;
+            }
         }
 
-        // Calcula o Saldo (Total - Entrada) e divide nas parcelas restantes
-        let saldo = total - entrada;
-        if (saldo > 0 && instCount > 0) {
-            let instValue = saldo / instCount;
-            for (let i = 1; i <= instCount; i++) {
+        // Calcula o Saldo (Total - Entrada)
+        let saldo = total - entradaVal;
+        if (saldo > 0 && saldoInstCount > 0) {
+            let instValue = saldo / saldoInstCount;
+            for (let i = 1; i <= saldoInstCount; i++) {
                 let num = i < 10 ? `0${i}` : i;
-                let titleStr = entrada > 0 ? `Parcela ${num} (Saldo)` : `Parcela ${num}`;
+                let titleStr = entradaVal > 0 ? `Parcela ${num} (Saldo)` : `Parcela ${num}`;
+                
                 arr.push({
                     id: index,
                     title: titleStr,
@@ -432,9 +447,9 @@
 
     function initDefaultData() {
         const buffet = {
-            id: 1, name: "🍽️ Buffet + Decoração", total: 13500, entrada: 4050, saldoParcelasCount: 12, installments: []
+            id: 1, name: "🍽️ Buffet + Decoração", total: 13500, entrada: 3000, entradaParcelasCount: 3, saldoParcelasCount: 12, installments: []
         };
-        buffet.installments = generateInstallments(13500, 4050, 12);
+        buffet.installments = generateInstallments(13500, 3000, 3, 12);
 
         appData.suppliers = [buffet];
         appData.goals = [
@@ -597,11 +612,15 @@
         document.getElementById('input-sup-name').value = sup.name;
         document.getElementById('input-sup-value').value = sup.total;
         
-        // Puxa o valor da entrada salvo ou deixa em branco se for zero
+        // Puxa o valor da entrada
         let entradaVal = sup.entrada !== undefined ? sup.entrada : 0;
         document.getElementById('input-sup-entrada').value = entradaVal > 0 ? entradaVal : '';
         
-        // Puxa as parcelas de saldo
+        // Puxa as parcelas da entrada
+        let entradaInst = sup.entradaParcelasCount !== undefined ? sup.entradaParcelasCount : 1;
+        document.getElementById('input-sup-entrada-inst').value = entradaVal > 0 ? entradaInst : '';
+        
+        // Puxa as parcelas do saldo
         let saldoInst = sup.saldoParcelasCount !== undefined ? sup.saldoParcelasCount : sup.installments.length;
         document.getElementById('input-sup-installments').value = saldoInst;
         
@@ -612,8 +631,11 @@
     function saveSupplier() {
         const name = document.getElementById('input-sup-name').value.trim() || 'Novo Fornecedor';
         const total = parseFloat(document.getElementById('input-sup-value').value) || 0;
+        
         const entrada = parseFloat(document.getElementById('input-sup-entrada').value) || 0;
-        let instCount = parseInt(document.getElementById('input-sup-installments').value) || 1;
+        const entradaInst = parseInt(document.getElementById('input-sup-entrada-inst').value) || (entrada > 0 ? 1 : 0);
+        
+        const saldoInstCount = parseInt(document.getElementById('input-sup-installments').value) || 1;
 
         if (total <= 0) { alert("Insira um valor total válido!"); return; }
         if (entrada > total) { alert("A entrada não pode ser maior que o valor total!"); return; }
@@ -623,16 +645,18 @@
             sup.name = name;
             
             let oldEntrada = sup.entrada || 0;
+            let oldEntradaInst = sup.entradaParcelasCount || 1;
             let oldSaldoInst = sup.saldoParcelasCount || sup.installments.length;
             
-            if (sup.total !== total || oldEntrada !== entrada || oldSaldoInst !== instCount) {
-                if(!confirm("Ao alterar o Valor, Entrada ou Parcelas, o histórico de pagamentos será zerado. Continuar?")) {
+            if (sup.total !== total || oldEntrada !== entrada || oldEntradaInst !== entradaInst || oldSaldoInst !== saldoInstCount) {
+                if(!confirm("Ao alterar os Valores ou Parcelas, o histórico de pagamentos será zerado. Continuar?")) {
                     return;
                 }
                 sup.total = total;
                 sup.entrada = entrada;
-                sup.saldoParcelasCount = instCount;
-                sup.installments = generateInstallments(total, entrada, instCount);
+                sup.entradaParcelasCount = entradaInst;
+                sup.saldoParcelasCount = saldoInstCount;
+                sup.installments = generateInstallments(total, entrada, entradaInst, saldoInstCount);
             }
         } else {
             const newSup = { 
@@ -640,8 +664,9 @@
                 name: name, 
                 total: total, 
                 entrada: entrada,
-                saldoParcelasCount: instCount,
-                installments: generateInstallments(total, entrada, instCount) 
+                entradaParcelasCount: entradaInst,
+                saldoParcelasCount: saldoInstCount,
+                installments: generateInstallments(total, entrada, entradaInst, saldoInstCount) 
             };
             appData.suppliers.push(newSup);
         }
@@ -804,6 +829,7 @@
             document.getElementById('input-sup-name').value = '';
             document.getElementById('input-sup-value').value = '';
             document.getElementById('input-sup-entrada').value = '';
+            document.getElementById('input-sup-entrada-inst').value = '';
             document.getElementById('input-sup-installments').value = '';
         } else if (id === 'modal-meta') {
             document.getElementById('input-goal-desc').value = '';
