@@ -9,209 +9,275 @@
 
         :root {
             --rosa-queimado: #D4A3A3;
+            --rosa-claro: #F4E4E4;
             --creme: #FAF9F6;
             --bege: #F5ECE9;
             --branco: #FFFFFF;
             --dourado: #C5A059;
             --cinza-escuro: #4A4A4A;
             --cinza-claro: #E0E0E0;
-            --verde-sucesso: #7CB342;
+            --verde-sucesso: #68A030;
             --vermelho-erro: #E53935;
-            --alerta-amarelo: #FB8C00;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; color: var(--cinza-escuro); }
-        body { background-color: var(--creme); display: flex; justify-content: center; }
+        
+        /* Fundo com textura pontilhada sutil */
+        body { 
+            background: url('data:image/svg+xml;utf8,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="rgba(212,163,163,0.15)"/></svg>') var(--bege);
+            display: flex; justify-content: center; 
+        }
         
         #app {
-            width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--creme);
-            position: relative; padding-bottom: 85px; box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            width: 100%; max-width: 480px; min-height: 100vh; 
+            background-color: rgba(250, 249, 246, 0.98); 
+            position: relative; padding-bottom: 85px; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            overflow-x: hidden;
         }
 
         header {
-            text-align: center; padding: 25px 20px; background: linear-gradient(to bottom, var(--bege), var(--creme));
-            border-bottom: 1px solid rgba(212, 163, 163, 0.2);
+            text-align: center; padding: 30px 20px 25px; 
+            background: linear-gradient(to bottom, var(--rosa-claro), transparent);
         }
 
-        h1 { font-family: 'Playfair Display', serif; color: var(--rosa-queimado); font-size: 26px; margin-bottom: 5px; }
-        .subtitle { font-size: 13px; color: #777; font-style: italic; }
-        .view { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--rosa-queimado); font-size: 28px; margin-bottom: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.02); }
+        .subtitle { font-size: 13px; color: #888; font-style: italic; letter-spacing: 0.5px; }
+        
+        .view { display: none; padding: 0 20px 20px; animation: fadeInView 0.4s ease; }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInView { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Animação em cascata (Stagger) para os itens */
+        .stagger-item { animation: slideUp 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(15px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Cartões mais elegantes */
         .card {
-            background-color: var(--branco); border-radius: 16px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(197, 160, 89, 0.1);
+            background-color: var(--branco); border-radius: 18px; padding: 22px; margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(212, 163, 163, 0.08); border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
         }
 
         .card-title {
-            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--dourado);
-            margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; font-weight: 600;
+            font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--dourado);
+            margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 600;
         }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .mini-card { background-color: var(--branco); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--bege); }
-        .mini-card span { display: block; font-size: 11px; color: #888; margin-bottom: 4px; }
-        .mini-card strong { font-size: 16px; color: var(--cinza-escuro); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .mini-card { background-color: var(--creme); padding: 14px; border-radius: 14px; text-align: center; border: 1px solid rgba(212, 163, 163, 0.1); transition: transform 0.2s; }
+        .mini-card:hover { transform: translateY(-2px); }
+        .mini-card span { display: block; font-size: 10px; color: #888; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px; }
+        .mini-card strong { font-size: 18px; color: var(--cinza-escuro); font-weight: 600; }
 
-        .progress-container { width: 100%; background-color: var(--bege); border-radius: 10px; height: 12px; overflow: hidden; margin: 10px 0; }
-        .progress-bar { height: 100%; background-color: var(--rosa-queimado); width: 0%; transition: width 0.5s ease; }
-        .progress-text { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
-
-        .supplier-item, .guest-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--bege); }
-        .supplier-item:last-child, .guest-item:last-child { border-bottom: none; }
-        .supplier-info h4, .guest-info h4 { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
-        .supplier-info p, .guest-info p { font-size: 12px; color: #777; }
-        .btn-detalhes { background: none; border: none; color: var(--rosa-queimado); font-weight: 600; cursor: pointer; font-size: 13px; }
+        /* Barra de Progresso Animada */
+        .progress-container { width: 100%; background-color: var(--bege); border-radius: 20px; height: 14px; overflow: hidden; margin: 12px 0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        .progress-bar { 
+            height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+            background: linear-gradient(45deg, rgba(255,255,255,.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.2) 50%, rgba(255,255,255,.2) 75%, transparent 75%, transparent);
+            background-color: var(--rosa-queimado); background-size: 20px 20px;
+            animation: moveStripes 1s linear infinite;
+        }
+        @keyframes moveStripes { from { background-position: 20px 0; } to { background-position: 0 0; } }
         
-        .item-actions { display: flex; gap: 8px; }
-        .btn-action-icon { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px; color: #BBB; border-radius: 4px; }
-        .btn-action-icon:hover { background: #f0f0f0; color: var(--cinza-escuro); }
-        .btn-delete-icon:hover { color: var(--vermelho-erro); background: #FFF0F0; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 12px; color: #777; font-weight: 500;}
 
-        .badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; display: inline-block; }
-        .badge-padrinho { background-color: #FFF3E0; color: var(--dourado); border: 1px solid #FFE0B2; }
-        .badge-madrinha { background-color: #FCE4EC; color: var(--rosa-queimado); border: 1px solid #F8BBD0; }
-        .badge-convidado { background-color: #F5F5F5; color: #666; border: 1px solid #E0E0E0; }
+        /* Itens de lista */
+        .supplier-item, .guest-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--rosa-claro); }
+        .supplier-item:last-child, .guest-item:last-child { border-bottom: none; }
+        .supplier-info h4, .guest-info h4 { margin-bottom: 5px; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; }
+        .supplier-info p, .guest-info p { font-size: 12px; color: #888; }
+        
+        .btn-detalhes { 
+            background: var(--rosa-claro); border: none; color: var(--rosa-queimado); 
+            font-weight: 600; cursor: pointer; font-size: 12px; padding: 6px 12px; border-radius: 20px; transition: 0.2s;
+        }
+        .btn-detalhes:hover { background: var(--rosa-queimado); color: white; }
+        
+        .item-actions { display: flex; gap: 6px; }
+        .btn-action-icon { background: white; border: 1px solid var(--cinza-claro); box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; font-size: 14px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-action-icon:hover { background: #f9f9f9; transform: scale(1.05); }
+        .btn-delete-icon:hover { color: var(--vermelho-erro); border-color: var(--vermelho-erro); background: #FFF0F0; }
 
-        .status-tag { font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; cursor: pointer; border: none; }
+        /* Badges */
+        .badge { font-size: 9px; padding: 4px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; display: inline-block; letter-spacing: 0.5px; }
+        .badge-padrinho { background-color: #FFF3E0; color: #F57C00; border: 1px solid #FFE0B2; }
+        .badge-madrinha { background-color: #FCE4EC; color: #D81B60; border: 1px solid #F8BBD0; }
+        .badge-convidado { background-color: #F5F5F5; color: #777; border: 1px solid #E0E0E0; }
+
+        .status-tag { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; cursor: pointer; border: none; transition: 0.2s; }
+        .status-tag:active { transform: scale(0.95); }
         .status-confirmado { background-color: #E8F5E9; color: var(--verde-sucesso); }
-        .status-pendente { background-color: #FFF8E1; color: var(--alerta-amarelo); }
+        .status-pendente { background-color: #FFF8E1; color: #F57C00; }
         .status-recusado { background-color: #FFEBEE; color: var(--vermelho-erro); }
 
+        /* Parcelas Animadas */
         .installments-list { margin-top: 15px; }
         .installment-item {
-            background: var(--creme); border-radius: 8px; padding: 12px; margin-bottom: 8px;
-            display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--cinza-claro); transition: 0.3s;
+            background: var(--branco); border-radius: 12px; padding: 14px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center; 
+            border: 1px solid var(--cinza-claro); border-left: 5px solid var(--cinza-claro); transition: all 0.3s ease;
         }
-        .installment-item.paid { border-left-color: var(--verde-sucesso); opacity: 0.8; }
-        .installment-details h5 { font-size: 14px; margin-bottom: 2px;}
-        .installment-details p { font-size: 11px; color: #777; }
-        .installment-action { display: flex; align-items: center; gap: 10px; }
-        .price-tag { font-weight: 600; font-size: 14px; }
+        .installment-item.paid { border-left-color: var(--verde-sucesso); background: #fcfdfc; border-color: #e6f0e6; }
+        .installment-details h5 { font-size: 14px; margin-bottom: 4px; font-weight: 600;}
+        .installment-details p { font-size: 11px; color: #888; }
+        .installment-action { display: flex; align-items: center; gap: 12px; }
+        .price-tag { font-weight: 600; font-size: 14px; color: var(--cinza-escuro); }
+        
+        /* Botão Checkmark Animado */
         .check-btn {
-            width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--cinza-claro);
-            background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--cinza-claro);
+            background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 16px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: transparent;
         }
-        .paid .check-btn { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
+        .paid .check-btn { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; transform: rotate(360deg); }
 
-        .timeline { border-left: 2px solid var(--rosa-queimado); padding-left: 15px; margin-left: 10px; margin-top: 15px; }
-        .timeline-item { position: relative; margin-bottom: 20px; }
+        /* Timeline & Metas */
+        .timeline { border-left: 2px dashed var(--rosa-queimado); padding-left: 20px; margin-left: 10px; margin-top: 20px; }
+        .timeline-item { position: relative; margin-bottom: 25px; }
         .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::before {
-            content: ''; position: absolute; left: -22px; top: 2px; width: 12px; height: 12px;
-            border-radius: 50%; background: var(--dourado); border: 2px solid var(--branco);
+            content: ''; position: absolute; left: -27px; top: 2px; width: 14px; height: 14px;
+            border-radius: 50%; background: var(--branco); border: 3px solid var(--dourado); box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
         }
-        .timeline-date { font-size: 11px; font-weight: 600; color: var(--rosa-queimado); text-transform: uppercase; margin-bottom: 4px; }
-        .timeline-content { font-size: 13px; color: var(--cinza-escuro); }
+        .timeline-date { font-size: 12px; font-weight: 700; color: var(--rosa-queimado); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;}
+        .timeline-content { font-size: 14px; color: var(--cinza-escuro); }
 
-        .goal-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--bege); }
+        .goal-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--rosa-claro); transition: 0.3s; }
         .goal-item:last-child { border-bottom: none; }
-        .goal-left { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
-        .goal-item.done .goal-text { text-decoration: line-through; color: #A0A0A0; }
-        .goal-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--cinza-claro); display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--branco); }
-        .goal-item.done .goal-check { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
-        .goal-text { font-size: 14px; font-weight: 500; }
-
-        .btn-primary {
-            width: 100%; padding: 14px; background-color: var(--rosa-queimado); color: white;
-            border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
-            margin-top: 15px; box-shadow: 0 4px 10px rgba(212, 163, 163, 0.4); transition: 0.2s;
+        .goal-left { display: flex; align-items: center; gap: 14px; cursor: pointer; flex: 1; }
+        .goal-item.done .goal-text { text-decoration: line-through; color: #B0B0B0; }
+        
+        .goal-check { 
+            width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--cinza-claro); 
+            display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--branco); transition: 0.3s; color: transparent;
         }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-outline { background-color: var(--branco); color: var(--rosa-queimado); border: 2px dashed var(--rosa-queimado); box-shadow: none; }
-        .btn-danger { background-color: #FFF0F0; color: var(--vermelho-erro); border: 1px solid #FFCDD2; margin-top: 10px; box-shadow: none; }
-        .back-btn { background: none; border: none; color: var(--cinza-escuro); font-size: 14px; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+        .goal-item.done .goal-check { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; transform: scale(1.1); }
+        .goal-text { font-size: 14px; font-weight: 500; transition: 0.3s; }
 
-        .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .filter-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--bege); background: var(--branco); font-size: 12px; cursor: pointer; white-space: nowrap; }
-        .filter-btn.active { background: var(--rosa-queimado); color: white; border-color: var(--rosa-queimado); }
+        /* Botões Principais Elevados */
+        .btn-primary {
+            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--rosa-queimado), #d19292); color: white;
+            border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+            margin-top: 10px; box-shadow: 0 6px 15px rgba(212, 163, 163, 0.4); transition: all 0.2s;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212, 163, 163, 0.5); }
+        .btn-primary:active { transform: translateY(1px); }
+        
+        .btn-outline { background: var(--branco); color: var(--rosa-queimado); border: 2px dashed var(--rosa-queimado); box-shadow: none; }
+        .btn-outline:hover { background: var(--rosa-claro); box-shadow: none; }
+        .btn-danger { background: #FFF0F0; color: var(--vermelho-erro); border: 1px solid #FFCDD2; margin-top: 15px; box-shadow: none; }
+        
+        .back-btn { background: none; border: none; color: #777; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .back-btn:hover { color: var(--rosa-queimado); transform: translateX(-3px); }
 
+        /* Filtros de Aba Estilosos */
+        .filter-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--cinza-claro); background: var(--branco); font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; color: #777; }
+        .filter-btn.active { background: var(--rosa-queimado); color: white; border-color: var(--rosa-queimado); box-shadow: 0 4px 10px rgba(212, 163, 163, 0.3); }
+
+        /* Modais Desfocados */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center;
         }
-        .modal-overlay.active { display: flex; }
-        .modal { background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; animation: fadeIn 0.3s ease; }
-        .modal h3 { color: var(--dourado); margin-bottom: 15px; font-size: 18px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--cinza-escuro); }
-        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid var(--cinza-claro); border-radius: 8px; font-size: 14px; outline: none; background: white; }
-        .input-group input:focus, .input-group select:focus { border-color: var(--rosa-queimado); }
-        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .modal-actions button { flex: 1; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
-        .btn-cancel { background: var(--cinza-claro); color: var(--cinza-escuro); }
-        .btn-save { background: var(--rosa-queimado); color: white; }
+        .modal-overlay.active { display: flex; animation: fadeInView 0.2s; }
+        .modal { background: var(--branco); padding: 30px 25px; border-radius: 24px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .modal h3 { color: var(--rosa-queimado); margin-bottom: 20px; font-size: 20px; text-align: center; font-family: 'Playfair Display', serif; }
+        
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group input, .input-group select { width: 100%; padding: 14px; border: 1px solid var(--cinza-claro); border-radius: 12px; font-size: 14px; outline: none; background: #fafafa; transition: 0.2s; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--rosa-queimado); background: white; box-shadow: 0 0 0 3px rgba(212,163,163,0.1); }
+        
+        .modal-actions { display: flex; gap: 12px; margin-top: 25px; }
+        .modal-actions button { flex: 1; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; font-size: 14px; transition: 0.2s; }
+        .btn-cancel { background: var(--bege); color: var(--cinza-escuro); }
+        .btn-save { background: var(--verde-sucesso); color: white; box-shadow: 0 4px 10px rgba(104, 160, 48, 0.3); }
 
+        /* Navegação Inferior Animada */
         nav {
-            position: fixed; bottom: 0; width: 100%; max-width: 480px; background-color: var(--branco);
-            display: flex; justify-content: space-around; padding: 12px 0 16px 0; border-top: 1px solid var(--bege);
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.02); z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; max-width: 480px; background-color: rgba(255,255,255,0.95);
+            display: flex; justify-content: space-around; padding: 12px 0 20px 0; border-top: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px); z-index: 1000;
         }
-        .nav-item { text-align: center; cursor: pointer; color: #A0A0A0; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
-        .nav-item.active { color: var(--rosa-queimado); font-weight: 600; }
-        .nav-icon { font-size: 18px; }
+        .nav-item { text-align: center; cursor: pointer; color: #A0A0A0; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; position: relative; font-weight: 500;}
+        .nav-icon { font-size: 20px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-item.active { color: var(--rosa-queimado); font-weight: 700; }
+        .nav-item.active .nav-icon { transform: translateY(-4px) scale(1.1); }
+        
+        /* Bolinha atrás do ícone ativo */
+        .nav-item::before {
+            content: ''; position: absolute; top: -2px; width: 36px; height: 36px;
+            background: var(--rosa-claro); border-radius: 50%; opacity: 0; transition: 0.3s; z-index: -1;
+        }
+        .nav-item.active::before { opacity: 1; transform: translateY(-4px); }
+
     </style>
+    <!-- Script do Confete -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
 <div id="app">
     <header>
         <h1>Felipe & Beatriz ❤️</h1>
-        <div class="subtitle">Nosso casamento, nosso planejamento, nosso sonho.</div>
+        <div class="subtitle">O caminho até o nosso "Sim"</div>
     </header>
 
     <main id="content">
         <!-- DASHBOARD -->
         <div id="view-dashboard" class="view active">
-            <div class="card" style="background: linear-gradient(135deg, var(--rosa-queimado), #E2B6B6); color: white; border: none;">
-                <h3 style="color: white; font-weight: 400; font-size: 13px; margin-bottom: 8px;">❤️ Progresso Financeiro</h3>
-                <h2 id="dash-total" style="color: white; font-size: 26px; margin-bottom: 12px;">R$ 0,00</h2>
-                <div class="progress-container" style="background: rgba(255,255,255,0.3);">
-                    <div id="dash-bar-main" class="progress-bar" style="background: white; width: 0%;"></div>
+            <div class="card stagger-item" style="background: linear-gradient(135deg, var(--rosa-queimado), #E2B6B6); color: white; border: none; animation-delay: 0.1s;">
+                <h3 style="color: rgba(255,255,255,0.9); font-weight: 500; font-size: 13px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Progresso Financeiro</h3>
+                <h2 id="dash-total" style="color: white; font-size: 32px; margin-bottom: 15px; font-family: 'Playfair Display', serif;">R$ 0,00</h2>
+                <div class="progress-container" style="background: rgba(0,0,0,0.1);">
+                    <div id="dash-bar-main" class="progress-bar" style="background-color: white; background-image: linear-gradient(45deg, rgba(0,0,0,.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.1) 75%, transparent 75%, transparent);"></div>
                 </div>
-                <div class="progress-text" style="color: white;">
+                <div class="progress-text" style="color: rgba(255,255,255,0.9);">
                     <span id="dash-paid-text">R$ 0,00 pagos</span>
-                    <span id="dash-percent">0% concluído</span>
+                    <span id="dash-percent" style="font-weight: 700;">0% concluído</span>
                 </div>
             </div>
 
-            <div class="grid-2">
-                <div class="mini-card">
+            <div class="grid-2 stagger-item" style="animation-delay: 0.2s;">
+                <div class="mini-card" style="border-bottom: 3px solid var(--verde-sucesso);">
                     <span>✅ JÁ PAGAMOS</span>
                     <strong id="dash-pago" style="color: var(--verde-sucesso);">R$ 0,00</strong>
                 </div>
-                <div class="mini-card">
+                <div class="mini-card" style="border-bottom: 3px solid #F57C00;">
                     <span>⏳ A PAGAR</span>
                     <strong id="dash-pendente">R$ 0,00</strong>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card stagger-item" style="animation-delay: 0.3s;">
                 <div class="card-title">👥 Resumo dos Convidados</div>
                 <div class="grid-2" style="margin-bottom: 0;">
                     <div class="mini-card" style="background: var(--creme);">
-                        <span>TOTAL CONVIDADOS</span>
+                        <span>TOTAL</span>
                         <strong id="dash-guest-total">0</strong>
                     </div>
-                    <div class="mini-card" style="background: #E8F5E9;">
-                        <span>CONFIRMADOS</span>
+                    <div class="mini-card" style="background: #E8F5E9; border-color: #C8E6C9;">
+                        <span style="color: var(--verde-sucesso);">CONFIRMADOS</span>
                         <strong id="dash-guest-confirmed" style="color: var(--verde-sucesso);">0</strong>
                     </div>
                 </div>
-                <div class="progress-text" style="margin-top: 10px; font-size: 12px;">
-                    <span>👑 Padrinhos / Madrinhas: <strong id="dash-guest-vip">0</strong></span>
-                    <span>⏳ Pendentes: <strong id="dash-guest-pending">0</strong></span>
+                <div class="progress-text" style="margin-top: 12px; font-size: 13px; font-weight: 500;">
+                    <span>👑 Padrinhos/Madrinhas: <strong id="dash-guest-vip" style="color: var(--dourado);">0</strong></span>
+                    <span>⏳ Pendentes: <strong id="dash-guest-pending" style="color: #F57C00;">0</strong></span>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card stagger-item" style="animation-delay: 0.4s;">
                 <div class="card-title">❤️ Divisão dos Pagamentos</div>
-                <div style="margin-bottom: 10px;">
-                    <div class="progress-text"><span>🤵 Felipe</span><strong id="dash-felipe">R$ 0,00</strong></div>
+                <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--bege);">
+                    <div class="progress-text"><span style="font-size: 14px;">🤵 Felipe</span><strong id="dash-felipe" style="font-size: 15px; color: var(--cinza-escuro);">R$ 0,00</strong></div>
                 </div>
                 <div>
-                    <div class="progress-text"><span>👰 Beatriz</span><strong id="dash-beatriz">R$ 0,00</strong></div>
+                    <div class="progress-text"><span style="font-size: 14px;">👰 Beatriz</span><strong id="dash-beatriz" style="font-size: 15px; color: var(--cinza-escuro);">R$ 0,00</strong></div>
                 </div>
             </div>
         </div>
@@ -222,74 +288,75 @@
                 <div class="card-title">📋 Nossos Fornecedores</div>
                 <div id="suppliers-list"></div>
             </div>
-            <button class="btn-primary" onclick="openModal('modal-fornecedor')">+ ADICIONAR FORNECEDOR</button>
+            <button class="btn-primary" onclick="openModal('modal-fornecedor')">✨ Novo Fornecedor</button>
         </div>
 
         <!-- DETALHES DO FORNECEDOR -->
         <div id="view-detalhes" class="view">
             <button class="back-btn" onclick="closeSupplierDetails()">← Voltar aos Fornecedores</button>
-            <div class="card">
-                <h3 id="det-name" style="margin-bottom: 5px; font-size: 20px;">Fornecedor</h3>
-                <p id="det-total" style="color: #777; font-size: 14px; margin-bottom: 15px;">Valor contratado: R$ 0,00</p>
+            <div class="card stagger-item">
+                <h3 id="det-name" style="margin-bottom: 8px; font-size: 22px; font-family: 'Playfair Display', serif; color: var(--rosa-queimado);">Fornecedor</h3>
+                <p id="det-total" style="color: #777; font-size: 14px; margin-bottom: 18px; font-weight: 500;">Valor contratado: R$ 0,00</p>
                 
                 <div class="progress-container">
                     <div id="sup-bar" class="progress-bar"></div>
                 </div>
-                <div class="progress-text" style="margin-bottom: 20px;">
-                    <span id="sup-paid-text">R$ 0,00 pagos</span>
+                <div class="progress-text" style="margin-bottom: 25px;">
+                    <span id="sup-paid-text" style="color: var(--verde-sucesso); font-weight: 600;">R$ 0,00 pagos</span>
                     <span id="sup-rest-text">Restante: R$ 0,00</span>
                 </div>
 
                 <div class="card-title">Plano de Pagamento</div>
-                <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Divisão padrão: 50% Felipe / 50% Beatriz</p>
-
                 <div id="installments-container" class="installments-list"></div>
 
-                <button class="btn-primary btn-outline" onclick="editCurrentSupplier()">✏️ Editar Informações</button>
-                <button class="btn-primary btn-danger" onclick="deleteCurrentSupplier()">Excluir Fornecedor</button>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn-primary btn-outline" style="flex: 1; margin-top: 0;" onclick="editCurrentSupplier()">✏️ Editar</button>
+                    <button class="btn-primary btn-danger" style="flex: 1; margin-top: 0;" onclick="deleteCurrentSupplier()">Excluir</button>
+                </div>
             </div>
         </div>
 
         <!-- CONVIDADOS -->
         <div id="view-convidados" class="view">
-            <div class="filter-tabs">
+            <div class="filter-tabs stagger-item" style="animation-delay: 0.1s;">
                 <button class="filter-btn active" onclick="filterGuests('todos', this)">Todos</button>
                 <button class="filter-btn" onclick="filterGuests('confirmados', this)">Confirmados</button>
                 <button class="filter-btn" onclick="filterGuests('padrinhos', this)">Padrinhos/Madrinhas</button>
                 <button class="filter-btn" onclick="filterGuests('pendentes', this)">Pendentes</button>
             </div>
 
-            <div class="card">
+            <div class="card stagger-item" style="animation-delay: 0.2s;">
                 <div class="card-title">
                     <span>👥 Lista de Convidados</span>
-                    <span id="guest-count-badge" style="font-size: 12px; color: #777;">0 convidados</span>
+                    <span id="guest-count-badge" style="font-size: 11px; background: var(--rosa-claro); padding: 4px 8px; border-radius: 12px; color: var(--rosa-queimado);">0</span>
                 </div>
                 <div id="guests-list"></div>
             </div>
-            <button class="btn-primary" onclick="openModal('modal-convidado')">+ ADICIONAR CONVIDADO</button>
+            <button class="btn-primary stagger-item" style="animation-delay: 0.3s;" onclick="openModal('modal-convidado')">✨ Adicionar Convidado</button>
         </div>
 
         <!-- AGENDA E METAS -->
         <div id="view-agenda" class="view">
-            <div class="card">
+            <div class="card stagger-item" style="animation-delay: 0.1s;">
                 <div class="card-title">📅 Linha do tempo</div>
                 <div class="timeline">
-                    <div class="timeline-item"><div class="timeline-date">Hoje</div><div class="timeline-content">Contratação dos fornecedores principais</div></div>
-                    <div class="timeline-item"><div class="timeline-date">Em andamento</div><div class="timeline-content">Pagamentos e confirmações de presença</div></div>
-                    <div class="timeline-item"><div class="timeline-date">O Grande Dia</div><div class="timeline-content" style="font-weight: 600; font-size: 15px;">💍 Celebração do Casamento!</div></div>
+                    <div class="timeline-item"><div class="timeline-date">Início</div><div class="timeline-content">O noivado e as primeiras escolhas!</div></div>
+                    <div class="timeline-item"><div class="timeline-date">Agora</div><div class="timeline-content">Contratações e organização dos detalhes</div></div>
+                    <div class="timeline-item"><div class="timeline-date">02/12/2028</div><div class="timeline-content" style="font-weight: 600; font-size: 15px; color: var(--rosa-queimado);">💍 Celebração do Casamento!</div></div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">🎯 Nossas Metas</div>
+            <div class="card stagger-item" style="animation-delay: 0.2s;">
+                <div class="card-title">🎯 Nossas Tarefas</div>
                 <div id="goals-container"></div>
             </div>
-            <button class="btn-primary btn-outline" onclick="openModal('modal-meta')">+ NOVA META</button>
+            <button class="btn-primary btn-outline stagger-item" style="animation-delay: 0.3s;" onclick="openModal('modal-meta')">+ Nova Tarefa</button>
         </div>
     </main>
 
+    <!-- MENU INFERIOR -->
     <nav>
-        <div class="nav-item active" onclick="switchTab('view-dashboard', this)"><span class="nav-icon">🏠</span>Início</div>
+        <div class="nav-item active" onclick="switchTab('view-dashboard', this)"><span class="nav-icon">🏠</span>Visão Geral</div>
         <div class="nav-item" onclick="switchTab('view-fornecedores', this)"><span class="nav-icon">📋</span>Fornecedores</div>
         <div class="nav-item" onclick="switchTab('view-convidados', this)"><span class="nav-icon">👥</span>Convidados</div>
         <div class="nav-item" onclick="switchTab('view-agenda', this)"><span class="nav-icon">📅</span>Agenda</div>
@@ -307,14 +374,14 @@
                 <label>Valor Total (R$)</label>
                 <input type="number" id="input-sup-value" placeholder="Ex: 5000" step="0.01">
             </div>
-            <div style="display: flex; gap: 10px; align-items: end; background: #fafafa; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px; align-items: end; background: var(--rosa-claro); padding: 12px; border-radius: 12px; margin-bottom: 16px;">
                 <div class="input-group" style="flex: 1; margin-bottom: 0;">
-                    <label>Entrada (R$)</label>
-                    <input type="number" id="input-sup-entrada" placeholder="Ex: 1000" step="0.01">
+                    <label style="color: var(--rosa-queimado);">Entrada (R$)</label>
+                    <input type="number" id="input-sup-entrada" placeholder="Opcional" step="0.01" style="border-color: transparent;">
                 </div>
                 <div class="input-group" style="flex: 0.6; margin-bottom: 0;">
-                    <label>Parcelas</label>
-                    <input type="number" id="input-sup-entrada-inst" placeholder="Ex: 2" min="1" max="12">
+                    <label style="color: var(--rosa-queimado);">Parcelas</label>
+                    <input type="number" id="input-sup-entrada-inst" placeholder="Ex: 1" min="1" max="12" style="border-color: transparent;">
                 </div>
             </div>
             <div class="input-group">
@@ -343,8 +410,8 @@
 
     <div class="modal-overlay" id="modal-meta">
         <div class="modal">
-            <h3>Nova Meta</h3>
-            <div class="input-group"><label>Descrição da Meta</label><input type="text" id="input-goal-desc" placeholder="Ex: Fechar docinhos"></div>
+            <h3>Nova Tarefa</h3>
+            <div class="input-group"><label>O que precisamos fazer?</label><input type="text" id="input-goal-desc" placeholder="Ex: Fechar docinhos"></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('modal-meta')">Cancelar</button>
                 <button class="btn-save" onclick="saveGoal()">Salvar</button>
@@ -380,6 +447,23 @@
 
     const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+    // Função para soltar confete 🎉
+    function fireConfetti() {
+        var duration = 2 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 25, spread: 360, ticks: 50, zIndex: 3000 };
+
+        function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+        var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            var particleCount = 40 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+    }
+
     function saveData() { dbRef.set(appData); }
 
     function loadData() {
@@ -397,45 +481,26 @@
         });
     }
 
-    // --- LÓGICA DE PARCELAMENTO: ENTRADA FIXA SEM NÚMEROS ---
     function generateInstallments(total, entradaVal, entradaInstCount, saldoInstCount) {
         let arr = [];
         let index = 1;
         
-        // Se houver valor de entrada
         if (entradaVal > 0) {
             let numEntradas = Math.max(1, entradaInstCount || 1);
             let valPorEntrada = entradaVal / numEntradas;
-            
             for (let i = 1; i <= numEntradas; i++) {
-                arr.push({
-                    id: index,
-                    title: "Entrada", // <- NOME FIXADO AQUI
-                    value: valPorEntrada,
-                    felipe: valPorEntrada / 2,
-                    beatriz: valPorEntrada / 2,
-                    status: 'pending'
-                });
+                arr.push({ id: index, title: "Entrada", value: valPorEntrada, felipe: valPorEntrada / 2, beatriz: valPorEntrada / 2, status: 'pending' });
                 index++;
             }
         }
 
-        // Calcula o Saldo (Total - Entrada)
         let saldo = total - entradaVal;
         if (saldo > 0 && saldoInstCount > 0) {
             let instValue = saldo / saldoInstCount;
             for (let i = 1; i <= saldoInstCount; i++) {
                 let num = i < 10 ? `0${i}` : i;
                 let titleStr = entradaVal > 0 ? `Parcela ${num} (Saldo)` : `Parcela ${num}`;
-                
-                arr.push({
-                    id: index,
-                    title: titleStr,
-                    value: instValue,
-                    felipe: instValue / 2,
-                    beatriz: instValue / 2,
-                    status: 'pending'
-                });
+                arr.push({ id: index, title: titleStr, value: instValue, felipe: instValue / 2, beatriz: instValue / 2, status: 'pending' });
                 index++;
             }
         }
@@ -511,23 +576,24 @@
         container.innerHTML = '';
         
         if (appData.suppliers.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 10px 0;">Nenhum fornecedor cadastrado.</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 20px 0;">Nenhum fornecedor cadastrado.</p>';
             return;
         }
 
-        appData.suppliers.forEach(sup => {
+        appData.suppliers.forEach((sup, index) => {
             let paidAmount = sup.installments.reduce((acc, inst) => inst.status === 'paid' ? acc + inst.value : acc, 0);
             let percent = sup.total > 0 ? (paidAmount / sup.total) * 100 : 0;
 
             const div = document.createElement('div');
-            div.className = 'supplier-item';
+            div.className = 'supplier-item stagger-item';
+            div.style.animationDelay = `${index * 0.05}s`;
             div.onclick = () => openSupplierDetails(sup.id);
             div.innerHTML = `
                 <div class="supplier-info">
                     <h4>${sup.name}</h4>
-                    <p>Total: ${formatBRL(sup.total)} | <span style="color: ${percent === 100 ? 'var(--verde-sucesso)' : '#777'}">${percent.toFixed(0)}% pago</span></p>
+                    <p>Total: ${formatBRL(sup.total)} | <span style="color: ${percent === 100 ? 'var(--verde-sucesso)' : '#888'}">${percent.toFixed(0)}% pago</span></p>
                 </div>
-                <button class="btn-detalhes">Ver →</button>
+                <button class="btn-detalhes">Detalhes</button>
             `;
             container.appendChild(div);
         });
@@ -560,7 +626,8 @@
         sup.installments.forEach((inst, index) => {
             const isPaid = inst.status === 'paid';
             const div = document.createElement('div');
-            div.className = `installment-item ${isPaid ? 'paid' : ''}`;
+            div.className = `installment-item stagger-item ${isPaid ? 'paid' : ''}`;
+            div.style.animationDelay = `${index * 0.05}s`;
             div.innerHTML = `
                 <div class="installment-details">
                     <h5>${inst.title}</h5>
@@ -587,7 +654,12 @@
         const sup = appData.suppliers.find(s => s.id === supplierId);
         if (sup) {
             let status = sup.installments[installmentIndex].status;
-            sup.installments[installmentIndex].status = status === 'pending' ? 'paid' : 'pending';
+            if (status === 'pending') {
+                sup.installments[installmentIndex].status = 'paid';
+                fireConfetti(); // Chuva de confetes ao pagar!
+            } else {
+                sup.installments[installmentIndex].status = 'pending';
+            }
             saveData();
         }
     }
@@ -646,27 +718,17 @@
                 if(!confirm("Ao alterar os Valores ou Parcelas, o histórico de pagamentos será zerado. Continuar?")) {
                     return;
                 }
-                sup.total = total;
-                sup.entrada = entrada;
-                sup.entradaParcelasCount = entradaInst;
-                sup.saldoParcelasCount = saldoInstCount;
+                sup.total = total; sup.entrada = entrada; sup.entradaParcelasCount = entradaInst; sup.saldoParcelasCount = saldoInstCount;
                 sup.installments = generateInstallments(total, entrada, entradaInst, saldoInstCount);
             }
         } else {
             const newSup = { 
-                id: Date.now(), 
-                name: name, 
-                total: total, 
-                entrada: entrada,
-                entradaParcelasCount: entradaInst,
-                saldoParcelasCount: saldoInstCount,
+                id: Date.now(), name: name, total: total, entrada: entrada, entradaParcelasCount: entradaInst, saldoParcelasCount: saldoInstCount,
                 installments: generateInstallments(total, entrada, entradaInst, saldoInstCount) 
             };
             appData.suppliers.push(newSup);
         }
-
-        saveData();
-        closeModal('modal-fornecedor');
+        saveData(); closeModal('modal-fornecedor');
     }
 
     /* CONVIDADOS */
@@ -686,25 +748,25 @@
         else if (currentGuestFilter === 'pendentes') filtered = appData.guests.filter(g => g.status === 'pendente');
         else if (currentGuestFilter === 'padrinhos') filtered = appData.guests.filter(g => g.role === 'Padrinho' || g.role === 'Madrinha');
 
-        document.getElementById('guest-count-badge').innerText = `${filtered.length} convidado(s)`;
+        document.getElementById('guest-count-badge').innerText = filtered.length;
 
         if (filtered.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 15px 0;">Nenhum convidado.</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 20px 0;">Nenhum convidado aqui.</p>';
             return;
         }
 
-        filtered.forEach(guest => {
+        filtered.forEach((guest, index) => {
             let badgeClass = 'badge-convidado';
             if (guest.role === 'Padrinho') badgeClass = 'badge-padrinho';
             if (guest.role === 'Madrinha') badgeClass = 'badge-madrinha';
 
-            let statusClass = 'status-pendente';
-            let statusText = '⏳ Pendente';
+            let statusClass = 'status-pendente'; let statusText = '⏳ Pendente';
             if (guest.status === 'confirmado') { statusClass = 'status-confirmado'; statusText = '✅ Confirmado'; }
             if (guest.status === 'recusado') { statusClass = 'status-recusado'; statusText = '❌ Ausente'; }
 
             const div = document.createElement('div');
-            div.className = 'guest-item';
+            div.className = 'guest-item stagger-item';
+            div.style.animationDelay = `${index * 0.03}s`;
             div.innerHTML = `
                 <div class="guest-info">
                     <h4>${guest.name} <span class="badge ${badgeClass}">${guest.role}</span></h4>
@@ -732,14 +794,11 @@
     function editGuest(id) {
         const guest = appData.guests.find(g => g.id === id);
         if (!guest) return;
-
         document.getElementById('modal-convidado-title').innerText = "Editar Convidado";
         document.getElementById('input-guest-name').value = guest.name;
         document.getElementById('input-guest-role').value = guest.role;
         document.getElementById('input-guest-status').value = guest.status;
-        
-        editingGuestId = id;
-        openModal('modal-convidado');
+        editingGuestId = id; openModal('modal-convidado');
     }
 
     function saveGuest() {
@@ -755,27 +814,23 @@
         } else {
             appData.guests.push({ id: Date.now(), name: name, role: role, status: status });
         }
-
-        saveData();
-        closeModal('modal-convidado');
+        saveData(); closeModal('modal-convidado');
     }
 
-    function deleteGuest(id) {
-        appData.guests = appData.guests.filter(g => g.id !== id);
-        saveData();
-    }
+    function deleteGuest(id) { appData.guests = appData.guests.filter(g => g.id !== id); saveData(); }
 
     /* METAS */
     function renderGoals() {
         const container = document.getElementById('goals-container');
         container.innerHTML = '';
         if (appData.goals.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 10px 0;">Nenhuma meta cadastrada.</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 10px 0;">Nenhuma tarefa cadastrada.</p>';
             return;
         }
-        appData.goals.forEach((goal) => {
+        appData.goals.forEach((goal, index) => {
             const div = document.createElement('div');
-            div.className = `goal-item ${goal.done ? 'done' : ''}`;
+            div.className = `goal-item stagger-item ${goal.done ? 'done' : ''}`;
+            div.style.animationDelay = `${index * 0.05}s`;
             div.innerHTML = `
                 <div class="goal-left" onclick="toggleGoal(${goal.id})">
                     <div class="goal-check">${goal.done ? '✓' : ''}</div>
@@ -789,20 +844,18 @@
 
     function toggleGoal(id) {
         const goal = appData.goals.find(g => g.id === id);
-        if (goal) { goal.done = !goal.done; saveData(); }
+        if (goal) { 
+            goal.done = !goal.done; 
+            if (goal.done) fireConfetti(); // Confetes ao terminar uma meta
+            saveData(); 
+        }
     }
 
-    function deleteGoal(id) {
-        appData.goals = appData.goals.filter(g => g.id !== id);
-        saveData();
-    }
+    function deleteGoal(id) { appData.goals = appData.goals.filter(g => g.id !== id); saveData(); }
 
     function saveGoal() {
         const text = document.getElementById('input-goal-desc').value.trim();
-        if (text !== '') {
-            appData.goals.push({ id: Date.now(), text: text, done: false });
-            saveData();
-        }
+        if (text !== '') { appData.goals.push({ id: Date.now(), text: text, done: false }); saveData(); }
         closeModal('modal-meta');
     }
 
@@ -812,19 +865,12 @@
     function closeModal(id) { 
         document.getElementById(id).classList.remove('active'); 
         if (id === 'modal-convidado') {
-            editingGuestId = null;
-            document.getElementById('modal-convidado-title').innerText = "Novo Convidado";
-            document.getElementById('input-guest-name').value = '';
-            document.getElementById('input-guest-role').value = 'Convidado';
-            document.getElementById('input-guest-status').value = 'pendente';
+            editingGuestId = null; document.getElementById('modal-convidado-title').innerText = "Novo Convidado";
+            document.getElementById('input-guest-name').value = ''; document.getElementById('input-guest-role').value = 'Convidado'; document.getElementById('input-guest-status').value = 'pendente';
         } else if (id === 'modal-fornecedor') {
-            editingSupplierId = null;
-            document.getElementById('modal-fornecedor-title').innerText = "Novo Fornecedor";
-            document.getElementById('input-sup-name').value = '';
-            document.getElementById('input-sup-value').value = '';
-            document.getElementById('input-sup-entrada').value = '';
-            document.getElementById('input-sup-entrada-inst').value = '';
-            document.getElementById('input-sup-installments').value = '';
+            editingSupplierId = null; document.getElementById('modal-fornecedor-title').innerText = "Novo Fornecedor";
+            document.getElementById('input-sup-name').value = ''; document.getElementById('input-sup-value').value = '';
+            document.getElementById('input-sup-entrada').value = ''; document.getElementById('input-sup-entrada-inst').value = ''; document.getElementById('input-sup-installments').value = '';
         } else if (id === 'modal-meta') {
             document.getElementById('input-goal-desc').value = '';
         }
@@ -833,8 +879,19 @@
     function switchTab(tabId, element) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
+        
+        const targetView = document.getElementById(tabId);
+        targetView.classList.add('active');
         if (element) element.classList.add('active');
+        
+        // Re-inicia animações removendo e adicionando as classes
+        const items = targetView.querySelectorAll('.stagger-item');
+        items.forEach(item => {
+            item.style.animation = 'none';
+            item.offsetHeight; // trigger reflow
+            item.style.animation = null; 
+        });
+
         currentSupplierId = null;
     }
 
