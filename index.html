@@ -20,46 +20,21 @@
             --alerta-amarelo: #FB8C00;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            color: var(--cinza-escuro);
-        }
-
-        body {
-            background-color: var(--creme);
-            display: flex;
-            justify-content: center;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; color: var(--cinza-escuro); }
+        body { background-color: var(--creme); display: flex; justify-content: center; }
+        
         #app {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            background-color: var(--creme);
-            position: relative;
-            padding-bottom: 85px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            width: 100%; max-width: 480px; min-height: 100vh; background-color: var(--creme);
+            position: relative; padding-bottom: 85px; box-shadow: 0 0 20px rgba(0,0,0,0.05);
         }
 
         header {
-            text-align: center;
-            padding: 25px 20px;
-            background: linear-gradient(to bottom, var(--bege), var(--creme));
+            text-align: center; padding: 25px 20px; background: linear-gradient(to bottom, var(--bege), var(--creme));
             border-bottom: 1px solid rgba(212, 163, 163, 0.2);
         }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: var(--rosa-queimado);
-            font-size: 26px;
-            margin-bottom: 5px;
-        }
-
+        h1 { font-family: 'Playfair Display', serif; color: var(--rosa-queimado); font-size: 26px; margin-bottom: 5px; }
         .subtitle { font-size: 13px; color: #777; font-style: italic; }
-
         .view { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -83,22 +58,17 @@
         .progress-bar { height: 100%; background-color: var(--rosa-queimado); width: 0%; transition: width 0.5s ease; }
         .progress-text { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
 
-        /* Lista de Fornecedores e Convidados */
-        .supplier-item, .guest-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--bege);
-        }
+        .supplier-item, .guest-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--bege); }
         .supplier-item:last-child, .guest-item:last-child { border-bottom: none; }
         .supplier-info h4, .guest-info h4 { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
         .supplier-info p, .guest-info p { font-size: 12px; color: #777; }
         .btn-detalhes { background: none; border: none; color: var(--rosa-queimado); font-weight: 600; cursor: pointer; font-size: 13px; }
         
-        /* Ações de item da lista (Editar/Deletar) */
         .item-actions { display: flex; gap: 8px; }
         .btn-action-icon { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px; color: #BBB; border-radius: 4px; }
         .btn-action-icon:hover { background: #f0f0f0; color: var(--cinza-escuro); }
         .btn-delete-icon:hover { color: var(--vermelho-erro); background: #FFF0F0; }
 
-        /* Badges e Tags */
         .badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; display: inline-block; }
         .badge-padrinho { background-color: #FFF3E0; color: var(--dourado); border: 1px solid #FFE0B2; }
         .badge-madrinha { background-color: #FCE4EC; color: var(--rosa-queimado); border: 1px solid #F8BBD0; }
@@ -109,7 +79,6 @@
         .status-pendente { background-color: #FFF8E1; color: var(--alerta-amarelo); }
         .status-recusado { background-color: #FFEBEE; color: var(--vermelho-erro); }
 
-        /* Parcelas */
         .installments-list { margin-top: 15px; }
         .installment-item {
             background: var(--creme); border-radius: 8px; padding: 12px; margin-bottom: 8px;
@@ -126,7 +95,6 @@
         }
         .paid .check-btn { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
 
-        /* Timeline & Metas */
         .timeline { border-left: 2px solid var(--rosa-queimado); padding-left: 15px; margin-left: 10px; margin-top: 15px; }
         .timeline-item { position: relative; margin-bottom: 20px; }
         .timeline-item:last-child { margin-bottom: 0; }
@@ -145,7 +113,6 @@
         .goal-item.done .goal-check { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
         .goal-text { font-size: 14px; font-weight: 500; }
 
-        /* Botões e Inputs */
         .btn-primary {
             width: 100%; padding: 14px; background-color: var(--rosa-queimado); color: white;
             border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -156,21 +123,16 @@
         .btn-danger { background-color: #FFF0F0; color: var(--vermelho-erro); border: 1px solid #FFCDD2; margin-top: 10px; box-shadow: none; }
         .back-btn { background: none; border: none; color: var(--cinza-escuro); font-size: 14px; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
 
-        /* Filtros de Aba */
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
         .filter-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--bege); background: var(--branco); font-size: 12px; cursor: pointer; white-space: nowrap; }
         .filter-btn.active { background: var(--rosa-queimado); color: white; border-color: var(--rosa-queimado); }
 
-        /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
         }
         .modal-overlay.active { display: flex; }
-        .modal {
-            background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px;
-            animation: fadeIn 0.3s ease;
-        }
+        .modal { background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px; animation: fadeIn 0.3s ease; }
         .modal h3 { color: var(--dourado); margin-bottom: 15px; font-size: 18px; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--cinza-escuro); }
@@ -181,7 +143,6 @@
         .btn-cancel { background: var(--cinza-claro); color: var(--cinza-escuro); }
         .btn-save { background: var(--rosa-queimado); color: white; }
 
-        /* Bottom Nav (4 Ícones) */
         nav {
             position: fixed; bottom: 0; width: 100%; max-width: 480px; background-color: var(--branco);
             display: flex; justify-content: space-around; padding: 12px 0 16px 0; border-top: 1px solid var(--bege);
@@ -334,22 +295,13 @@
         <div class="nav-item" onclick="switchTab('view-agenda', this)"><span class="nav-icon">📅</span>Agenda</div>
     </nav>
 
-    <!-- MODAL: Adicionar/Editar Fornecedor -->
+    <!-- MODAIS -->
     <div class="modal-overlay" id="modal-fornecedor">
         <div class="modal">
             <h3 id="modal-fornecedor-title">Novo Fornecedor</h3>
-            <div class="input-group">
-                <label>Ícone e Nome</label>
-                <input type="text" id="input-sup-name" placeholder="Ex: 📸 Fotógrafo ou 👗 Vestido">
-            </div>
-            <div class="input-group">
-                <label>Valor Total (R$)</label>
-                <input type="number" id="input-sup-value" placeholder="Ex: 5000" step="0.01">
-            </div>
-            <div class="input-group">
-                <label>Quantidade de Parcelas</label>
-                <input type="number" id="input-sup-installments" placeholder="Ex: 5" min="1" max="60">
-            </div>
+            <div class="input-group"><label>Ícone e Nome</label><input type="text" id="input-sup-name" placeholder="Ex: 📸 Fotógrafo"></div>
+            <div class="input-group"><label>Valor Total (R$)</label><input type="number" id="input-sup-value" placeholder="Ex: 5000" step="0.01"></div>
+            <div class="input-group"><label>Quantidade de Parcelas</label><input type="number" id="input-sup-installments" placeholder="Ex: 5" min="1" max="60"></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('modal-fornecedor')">Cancelar</button>
                 <button class="btn-save" onclick="saveSupplier()">Salvar</button>
@@ -357,30 +309,12 @@
         </div>
     </div>
 
-    <!-- MODAL: Adicionar/Editar Convidado -->
     <div class="modal-overlay" id="modal-convidado">
         <div class="modal">
             <h3 id="modal-convidado-title">Novo Convidado</h3>
-            <div class="input-group">
-                <label>Nome Completo</label>
-                <input type="text" id="input-guest-name" placeholder="Ex: Maria Silva">
-            </div>
-            <div class="input-group">
-                <label>Categoria</label>
-                <select id="input-guest-role">
-                    <option value="Convidado">Convidado Comum</option>
-                    <option value="Padrinho">🤵 Padrinho</option>
-                    <option value="Madrinha">👰 Madrinha</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Status da Presença</label>
-                <select id="input-guest-status">
-                    <option value="pendente">⏳ Pendente</option>
-                    <option value="confirmado">✅ Confirmado</option>
-                    <option value="recusado">❌ Não poderá ir</option>
-                </select>
-            </div>
+            <div class="input-group"><label>Nome Completo</label><input type="text" id="input-guest-name" placeholder="Ex: Maria Silva"></div>
+            <div class="input-group"><label>Categoria</label><select id="input-guest-role"><option value="Convidado">Convidado Comum</option><option value="Padrinho">🤵 Padrinho</option><option value="Madrinha">👰 Madrinha</option></select></div>
+            <div class="input-group"><label>Status da Presença</label><select id="input-guest-status"><option value="pendente">⏳ Pendente</option><option value="confirmado">✅ Confirmado</option><option value="recusado">❌ Não poderá ir</option></select></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('modal-convidado')">Cancelar</button>
                 <button class="btn-save" onclick="saveGuest()">Salvar</button>
@@ -388,14 +322,10 @@
         </div>
     </div>
 
-    <!-- MODAL: Adicionar Meta -->
     <div class="modal-overlay" id="modal-meta">
         <div class="modal">
             <h3>Nova Meta</h3>
-            <div class="input-group">
-                <label>Descrição da Meta</label>
-                <input type="text" id="input-goal-desc" placeholder="Ex: Fechar docinhos">
-            </div>
+            <div class="input-group"><label>Descrição da Meta</label><input type="text" id="input-goal-desc" placeholder="Ex: Fechar docinhos"></div>
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('modal-meta')">Cancelar</button>
                 <button class="btn-save" onclick="saveGoal()">Salvar</button>
@@ -404,12 +334,28 @@
     </div>
 </div>
 
+<!-- SCRIPTS DO FIREBASE (Compat v8) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <script>
-    const STORAGE_KEY = 'casamento_felipe_beatriz_app_v2';
+    // 1. Configuração do Firebase mapeada exatamente do seu código
+    const firebaseConfig = {
+        apiKey: "AIzaSyCYdI4klBgurhbFjPbHbCg-XSzPJfgtQ34",
+        authDomain: "nosso-casamento-1d206.firebaseapp.com",
+        databaseURL: "https://nosso-casamento-1d206-default-rtdb.firebaseio.com",
+        projectId: "nosso-casamento-1d206",
+        storageBucket: "nosso-casamento-1d206.firebasestorage.app",
+        messagingSenderId: "744830571474",
+        appId: "1:744830571474:web:5f823978d001eb2c4cee0b",
+        measurementId: "G-PPBV5SPTZ6"
+    };
+
+    // Inicializa o Firebase e cria referência ao banco
+    firebase.initializeApp(firebaseConfig);
+    const dbRef = firebase.database().ref('casamento_data');
 
     let appData = { suppliers: [], goals: [], guests: [] };
-    
-    // Variáveis de controle de edição
     let currentSupplierId = null; 
     let editingSupplierId = null;
     let editingGuestId = null;
@@ -417,17 +363,30 @@
 
     const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
+    // --- MUDANÇAS AQUI: Lógica de Banco de Dados na Nuvem ---
 
-    function loadData() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                appData = JSON.parse(saved);
-                if (!appData.guests) appData.guests = [];
-            } catch (e) { initDefaultData(); }
-        } else { initDefaultData(); }
+    // 2. Salva os dados direto no Firebase
+    function saveData() {
+        dbRef.set(appData);
     }
+
+    // 3. Fica "escutando" a nuvem em tempo real
+    function loadData() {
+        dbRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                appData = data;
+                if (!appData.guests) appData.guests = [];
+                if (!appData.suppliers) appData.suppliers = [];
+                if (!appData.goals) appData.goals = [];
+            } else {
+                initDefaultData();
+            }
+            updateUI(); // Atualiza a tela automaticamente para todo mundo
+        });
+    }
+
+    // --- O RESTANTE DO CÓDIGO CONTINUA IGUAL ---
 
     function initDefaultData() {
         const buffet = {
@@ -452,7 +411,8 @@
             { id: 2, name: "Camila Ribeiro", role: "Madrinha", status: "confirmado" },
             { id: 3, name: "Carlos Eduardo", role: "Convidado", status: "pendente" }
         ];
-        saveData();
+        
+        saveData(); // Ao chamar isso, ele enviará os dados iniciais para a nuvem
     }
 
     function updateUI() {
@@ -581,7 +541,6 @@
             let status = sup.installments[installmentIndex].status;
             sup.installments[installmentIndex].status = status === 'pending' ? 'paid' : 'pending';
             saveData();
-            updateUI();
         }
     }
 
@@ -591,11 +550,9 @@
             appData.suppliers = appData.suppliers.filter(s => s.id !== currentSupplierId);
             saveData();
             closeSupplierDetails();
-            updateUI();
         }
     }
 
-    // Preparar Modal para Editar Fornecedor
     function editCurrentSupplier() {
         const sup = appData.suppliers.find(s => s.id === currentSupplierId);
         if (!sup) return;
@@ -617,13 +574,11 @@
         if (total <= 0) { alert("Insira um valor válido!"); return; }
 
         if (editingSupplierId) {
-            // Modo Edição
             let sup = appData.suppliers.find(s => s.id === editingSupplierId);
             sup.name = name;
             
-            // Se mudou o valor ou parcelas, refaz as contas e reseta os pagamentos
             if (sup.total !== total || sup.installments.length !== instCount) {
-                if(!confirm("Ao alterar o Valor ou a Quantidade de Parcelas, o histórico de pagamentos deste fornecedor será zerado. Deseja continuar?")) {
+                if(!confirm("Ao alterar o Valor ou a Quantidade de Parcelas, o histórico de pagamentos será zerado. Continuar?")) {
                     return;
                 }
                 sup.total = total;
@@ -637,7 +592,6 @@
                 }
             }
         } else {
-            // Modo Criação
             const newSup = { id: Date.now(), name: name, total: total, installments: [] };
             const instValue = total / instCount;
             for (let i = 1; i <= instCount; i++) {
@@ -650,7 +604,6 @@
         }
 
         saveData();
-        updateUI();
         closeModal('modal-fornecedor');
     }
 
@@ -674,7 +627,7 @@
         document.getElementById('guest-count-badge').innerText = `${filtered.length} convidado(s)`;
 
         if (filtered.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 15px 0;">Nenhum convidado nesta categoria.</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 15px 0;">Nenhum convidado.</p>';
             return;
         }
 
@@ -711,11 +664,9 @@
             else if (guest.status === 'confirmado') guest.status = 'recusado';
             else guest.status = 'pendente';
             saveData();
-            updateUI();
         }
     }
 
-    // Preparar Modal para Editar Convidado
     function editGuest(id) {
         const guest = appData.guests.find(g => g.id === id);
         if (!guest) return;
@@ -737,25 +688,19 @@
         if (name === '') { alert("Insira o nome do convidado!"); return; }
 
         if (editingGuestId) {
-            // Atualiza convidado existente
             let guest = appData.guests.find(g => g.id === editingGuestId);
-            guest.name = name;
-            guest.role = role;
-            guest.status = status;
+            guest.name = name; guest.role = role; guest.status = status;
         } else {
-            // Cria novo convidado
             appData.guests.push({ id: Date.now(), name: name, role: role, status: status });
         }
 
         saveData();
-        updateUI();
         closeModal('modal-convidado');
     }
 
     function deleteGuest(id) {
         appData.guests = appData.guests.filter(g => g.id !== id);
         saveData();
-        updateUI();
     }
 
     /* METAS */
@@ -782,19 +727,19 @@
 
     function toggleGoal(id) {
         const goal = appData.goals.find(g => g.id === id);
-        if (goal) { goal.done = !goal.done; saveData(); renderGoals(); }
+        if (goal) { goal.done = !goal.done; saveData(); }
     }
 
     function deleteGoal(id) {
         appData.goals = appData.goals.filter(g => g.id !== id);
-        saveData(); renderGoals();
+        saveData();
     }
 
     function saveGoal() {
         const text = document.getElementById('input-goal-desc').value.trim();
         if (text !== '') {
             appData.goals.push({ id: Date.now(), text: text, done: false });
-            saveData(); renderGoals();
+            saveData();
         }
         closeModal('modal-meta');
     }
@@ -804,8 +749,6 @@
     
     function closeModal(id) { 
         document.getElementById(id).classList.remove('active'); 
-        
-        // Limpar inputs e resetar modo de edição sempre que um modal for fechado
         if (id === 'modal-convidado') {
             editingGuestId = null;
             document.getElementById('modal-convidado-title').innerText = "Novo Convidado";
@@ -831,9 +774,8 @@
         currentSupplierId = null;
     }
 
-    /* INICIALIZAÇÃO */
+    /* INICIALIZAÇÃO INICIA O LISTENER DO FIREBASE */
     loadData();
-    updateUI();
 </script>
 
 </body>
