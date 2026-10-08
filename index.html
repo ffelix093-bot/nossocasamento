@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felipe & Beatriz - Nosso Casamento</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600&display=swap');
+
+        :root {
+            --rosa-queimado: #D4A3A3;
+            --creme: #FAF9F6;
+            --bege: #F5ECE9;
+            --branco: #FFFFFF;
+            --dourado: #C5A059;
+            --cinza-escuro: #4A4A4A;
+            --cinza-claro: #E0E0E0;
+            --verde-sucesso: #7CB342;
+            --vermelho-erro: #E53935;
+            --alerta-amarelo: #FB8C00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--cinza-escuro);
+        }
+
+        body {
+            background-color: var(--creme);
+            display: flex;
+            justify-content: center;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: var(--creme);
+            position: relative;
+            padding-bottom: 85px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(to bottom, var(--bege), var(--creme));
+            border-bottom: 1px solid rgba(212, 163, 163, 0.2);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--rosa-queimado);
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle { font-size: 13px; color: #777; font-style: italic; }
+
+        .view { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background-color: var(--branco); border-radius: 16px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(197, 160, 89, 0.1);
+        }
+
+        .card-title {
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--dourado);
+            margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; font-weight: 600;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .mini-card { background-color: var(--branco); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--bege); }
+        .mini-card span { display: block; font-size: 11px; color: #888; margin-bottom: 4px; }
+        .mini-card strong { font-size: 16px; color: var(--cinza-escuro); }
+
+        .progress-container { width: 100%; background-color: var(--bege); border-radius: 10px; height: 12px; overflow: hidden; margin: 10px 0; }
+        .progress-bar { height: 100%; background-color: var(--rosa-queimado); width: 0%; transition: width 0.5s ease; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
+
+        /* Lista de Fornecedores e Convidados */
+        .supplier-item, .guest-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--bege);
+        }
+        .supplier-item:last-child, .guest-item:last-child { border-bottom: none; }
+        .supplier-info h4, .guest-info h4 { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+        .supplier-info p, .guest-info p { font-size: 12px; color: #777; }
+        .btn-detalhes { background: none; border: none; color: var(--rosa-queimado); font-weight: 600; cursor: pointer; font-size: 13px; }
+        
+        /* Ações de item da lista (Editar/Deletar) */
+        .item-actions { display: flex; gap: 8px; }
+        .btn-action-icon { background: none; border: none; cursor: pointer; font-size: 15px; padding: 4px; color: #BBB; border-radius: 4px; }
+        .btn-action-icon:hover { background: #f0f0f0; color: var(--cinza-escuro); }
+        .btn-delete-icon:hover { color: var(--vermelho-erro); background: #FFF0F0; }
+
+        /* Badges e Tags */
+        .badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+        .badge-padrinho { background-color: #FFF3E0; color: var(--dourado); border: 1px solid #FFE0B2; }
+        .badge-madrinha { background-color: #FCE4EC; color: var(--rosa-queimado); border: 1px solid #F8BBD0; }
+        .badge-convidado { background-color: #F5F5F5; color: #666; border: 1px solid #E0E0E0; }
+
+        .status-tag { font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; cursor: pointer; border: none; }
+        .status-confirmado { background-color: #E8F5E9; color: var(--verde-sucesso); }
+        .status-pendente { background-color: #FFF8E1; color: var(--alerta-amarelo); }
+        .status-recusado { background-color: #FFEBEE; color: var(--vermelho-erro); }
+
+        /* Parcelas */
+        .installments-list { margin-top: 15px; }
+        .installment-item {
+            background: var(--creme); border-radius: 8px; padding: 12px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--cinza-claro); transition: 0.3s;
+        }
+        .installment-item.paid { border-left-color: var(--verde-sucesso); opacity: 0.8; }
+        .installment-details h5 { font-size: 14px; margin-bottom: 2px;}
+        .installment-details p { font-size: 11px; color: #777; }
+        .installment-action { display: flex; align-items: center; gap: 10px; }
+        .price-tag { font-weight: 600; font-size: 14px; }
+        .check-btn {
+            width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--cinza-claro);
+            background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .paid .check-btn { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
+
+        /* Timeline & Metas */
+        .timeline { border-left: 2px solid var(--rosa-queimado); padding-left: 15px; margin-left: 10px; margin-top: 15px; }
+        .timeline-item { position: relative; margin-bottom: 20px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -22px; top: 2px; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--dourado); border: 2px solid var(--branco);
+        }
+        .timeline-date { font-size: 11px; font-weight: 600; color: var(--rosa-queimado); text-transform: uppercase; margin-bottom: 4px; }
+        .timeline-content { font-size: 13px; color: var(--cinza-escuro); }
+
+        .goal-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--bege); }
+        .goal-item:last-child { border-bottom: none; }
+        .goal-left { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
+        .goal-item.done .goal-text { text-decoration: line-through; color: #A0A0A0; }
+        .goal-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--cinza-claro); display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--branco); }
+        .goal-item.done .goal-check { background: var(--verde-sucesso); border-color: var(--verde-sucesso); color: white; }
+        .goal-text { font-size: 14px; font-weight: 500; }
+
+        /* Botões e Inputs */
+        .btn-primary {
+            width: 100%; padding: 14px; background-color: var(--rosa-queimado); color: white;
+            border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+            margin-top: 15px; box-shadow: 0 4px 10px rgba(212, 163, 163, 0.4); transition: 0.2s;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-outline { background-color: var(--branco); color: var(--rosa-queimado); border: 2px dashed var(--rosa-queimado); box-shadow: none; }
+        .btn-danger { background-color: #FFF0F0; color: var(--vermelho-erro); border: 1px solid #FFCDD2; margin-top: 10px; box-shadow: none; }
+        .back-btn { background: none; border: none; color: var(--cinza-escuro); font-size: 14px; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+
+        /* Filtros de Aba */
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-btn { padding: 6px 12px; border-radius: 20px; border: 1px solid var(--bege); background: var(--branco); font-size: 12px; cursor: pointer; white-space: nowrap; }
+        .filter-btn.active { background: var(--rosa-queimado); color: white; border-color: var(--rosa-queimado); }
+
+        /* Modais */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--branco); padding: 25px; border-radius: 16px; width: 90%; max-width: 400px;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal h3 { color: var(--dourado); margin-bottom: 15px; font-size: 18px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--cinza-escuro); }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid var(--cinza-claro); border-radius: 8px; font-size: 14px; outline: none; background: white; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--rosa-queimado); }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-actions button { flex: 1; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-cancel { background: var(--cinza-claro); color: var(--cinza-escuro); }
+        .btn-save { background: var(--rosa-queimado); color: white; }
+
+        /* Bottom Nav (4 Ícones) */
+        nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 480px; background-color: var(--branco);
+            display: flex; justify-content: space-around; padding: 12px 0 16px 0; border-top: 1px solid var(--bege);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02); z-index: 1000;
+        }
+        .nav-item { text-align: center; cursor: pointer; color: #A0A0A0; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+        .nav-item.active { color: var(--rosa-queimado); font-weight: 600; }
+        .nav-icon { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <header>
+        <h1>Felipe & Beatriz ❤️</h1>
+        <div class="subtitle">Nosso casamento, nosso planejamento, nosso sonho.</div>
+    </header>
+
+    <main id="content">
+        <!-- DASHBOARD -->
+        <div id="view-dashboard" class="view active">
+            <div class="card" style="background: linear-gradient(135deg, var(--rosa-queimado), #E2B6B6); color: white; border: none;">
+                <h3 style="color: white; font-weight: 400; font-size: 13px; margin-bottom: 8px;">❤️ Progresso Financeiro</h3>
+                <h2 id="dash-total" style="color: white; font-size: 26px; margin-bottom: 12px;">R$ 0,00</h2>
+                <div class="progress-container" style="background: rgba(255,255,255,0.3);">
+                    <div id="dash-bar-main" class="progress-bar" style="background: white; width: 0%;"></div>
+                </div>
+                <div class="progress-text" style="color: white;">
+                    <span id="dash-paid-text">R$ 0,00 pagos</span>
+                    <span id="dash-percent">0% concluído</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="mini-card">
+                    <span>✅ JÁ PAGAMOS</span>
+                    <strong id="dash-pago" style="color: var(--verde-sucesso);">R$ 0,00</strong>
+                </div>
+                <div class="mini-card">
+                    <span>⏳ A PAGAR</span>
+                    <strong id="dash-pendente">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">👥 Resumo dos Convidados</div>
+                <div class="grid-2" style="margin-bottom: 0;">
+                    <div class="mini-card" style="background: var(--creme);">
+                        <span>TOTAL CONVIDADOS</span>
+                        <strong id="dash-guest-total">0</strong>
+                    </div>
+                    <div class="mini-card" style="background: #E8F5E9;">
+                        <span>CONFIRMADOS</span>
+                        <strong id="dash-guest-confirmed" style="color: var(--verde-sucesso);">0</strong>
+                    </div>
+                </div>
+                <div class="progress-text" style="margin-top: 10px; font-size: 12px;">
+                    <span>👑 Padrinhos / Madrinhas: <strong id="dash-guest-vip">0</strong></span>
+                    <span>⏳ Pendentes: <strong id="dash-guest-pending">0</strong></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">❤️ Divisão dos Pagamentos</div>
+                <div style="margin-bottom: 10px;">
+                    <div class="progress-text"><span>🤵 Felipe</span><strong id="dash-felipe">R$ 0,00</strong></div>
+                </div>
+                <div>
+                    <div class="progress-text"><span>👰 Beatriz</span><strong id="dash-beatriz">R$ 0,00</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORNECEDORES -->
+        <div id="view-fornecedores" class="view">
+            <div class="card">
+                <div class="card-title">📋 Nossos Fornecedores</div>
+                <div id="suppliers-list"></div>
+            </div>
+            <button class="btn-primary" onclick="openModal('modal-fornecedor')">+ ADICIONAR FORNECEDOR</button>
+        </div>
+
+        <!-- DETALHES DO FORNECEDOR -->
+        <div id="view-detalhes" class="view">
+            <button class="back-btn" onclick="closeSupplierDetails()">← Voltar aos Fornecedores</button>
+            <div class="card">
+                <h3 id="det-name" style="margin-bottom: 5px; font-size: 20px;">Fornecedor</h3>
+                <p id="det-total" style="color: #777; font-size: 14px; margin-bottom: 15px;">Valor contratado: R$ 0,00</p>
+                
+                <div class="progress-container">
+                    <div id="sup-bar" class="progress-bar"></div>
+                </div>
+                <div class="progress-text" style="margin-bottom: 20px;">
+                    <span id="sup-paid-text">R$ 0,00 pagos</span>
+                    <span id="sup-rest-text">Restante: R$ 0,00</span>
+                </div>
+
+                <div class="card-title">Plano de Pagamento</div>
+                <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Divisão padrão: 50% Felipe / 50% Beatriz</p>
+
+                <div id="installments-container" class="installments-list"></div>
+
+                <button class="btn-primary btn-outline" onclick="editCurrentSupplier()">✏️ Editar Informações</button>
+                <button class="btn-primary btn-danger" onclick="deleteCurrentSupplier()">Excluir Fornecedor</button>
+            </div>
+        </div>
+
+        <!-- CONVIDADOS -->
+        <div id="view-convidados" class="view">
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterGuests('todos', this)">Todos</button>
+                <button class="filter-btn" onclick="filterGuests('confirmados', this)">Confirmados</button>
+                <button class="filter-btn" onclick="filterGuests('padrinhos', this)">Padrinhos/Madrinhas</button>
+                <button class="filter-btn" onclick="filterGuests('pendentes', this)">Pendentes</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>👥 Lista de Convidados</span>
+                    <span id="guest-count-badge" style="font-size: 12px; color: #777;">0 convidados</span>
+                </div>
+                <div id="guests-list"></div>
+            </div>
+            <button class="btn-primary" onclick="openModal('modal-convidado')">+ ADICIONAR CONVIDADO</button>
+        </div>
+
+        <!-- AGENDA E METAS -->
+        <div id="view-agenda" class="view">
+            <div class="card">
+                <div class="card-title">📅 Linha do tempo</div>
+                <div class="timeline">
+                    <div class="timeline-item"><div class="timeline-date">Hoje</div><div class="timeline-content">Contratação dos fornecedores principais</div></div>
+                    <div class="timeline-item"><div class="timeline-date">Em andamento</div><div class="timeline-content">Pagamentos e confirmações de presença</div></div>
+                    <div class="timeline-item"><div class="timeline-date">O Grande Dia</div><div class="timeline-content" style="font-weight: 600; font-size: 15px;">💍 Celebração do Casamento!</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Nossas Metas</div>
+                <div id="goals-container"></div>
+            </div>
+            <button class="btn-primary btn-outline" onclick="openModal('modal-meta')">+ NOVA META</button>
+        </div>
+    </main>
+
+    <nav>
+        <div class="nav-item active" onclick="switchTab('view-dashboard', this)"><span class="nav-icon">🏠</span>Início</div>
+        <div class="nav-item" onclick="switchTab('view-fornecedores', this)"><span class="nav-icon">📋</span>Fornecedores</div>
+        <div class="nav-item" onclick="switchTab('view-convidados', this)"><span class="nav-icon">👥</span>Convidados</div>
+        <div class="nav-item" onclick="switchTab('view-agenda', this)"><span class="nav-icon">📅</span>Agenda</div>
+    </nav>
+
+    <!-- MODAL: Adicionar/Editar Fornecedor -->
+    <div class="modal-overlay" id="modal-fornecedor">
+        <div class="modal">
+            <h3 id="modal-fornecedor-title">Novo Fornecedor</h3>
+            <div class="input-group">
+                <label>Ícone e Nome</label>
+                <input type="text" id="input-sup-name" placeholder="Ex: 📸 Fotógrafo ou 👗 Vestido">
+            </div>
+            <div class="input-group">
+                <label>Valor Total (R$)</label>
+                <input type="number" id="input-sup-value" placeholder="Ex: 5000" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Quantidade de Parcelas</label>
+                <input type="number" id="input-sup-installments" placeholder="Ex: 5" min="1" max="60">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-fornecedor')">Cancelar</button>
+                <button class="btn-save" onclick="saveSupplier()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Adicionar/Editar Convidado -->
+    <div class="modal-overlay" id="modal-convidado">
+        <div class="modal">
+            <h3 id="modal-convidado-title">Novo Convidado</h3>
+            <div class="input-group">
+                <label>Nome Completo</label>
+                <input type="text" id="input-guest-name" placeholder="Ex: Maria Silva">
+            </div>
+            <div class="input-group">
+                <label>Categoria</label>
+                <select id="input-guest-role">
+                    <option value="Convidado">Convidado Comum</option>
+                    <option value="Padrinho">🤵 Padrinho</option>
+                    <option value="Madrinha">👰 Madrinha</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Status da Presença</label>
+                <select id="input-guest-status">
+                    <option value="pendente">⏳ Pendente</option>
+                    <option value="confirmado">✅ Confirmado</option>
+                    <option value="recusado">❌ Não poderá ir</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-convidado')">Cancelar</button>
+                <button class="btn-save" onclick="saveGuest()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Adicionar Meta -->
+    <div class="modal-overlay" id="modal-meta">
+        <div class="modal">
+            <h3>Nova Meta</h3>
+            <div class="input-group">
+                <label>Descrição da Meta</label>
+                <input type="text" id="input-goal-desc" placeholder="Ex: Fechar docinhos">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-meta')">Cancelar</button>
+                <button class="btn-save" onclick="saveGoal()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'casamento_felipe_beatriz_app_v2';
+
+    let appData = { suppliers: [], goals: [], guests: [] };
+    
+    // Variáveis de controle de edição
+    let currentSupplierId = null; 
+    let editingSupplierId = null;
+    let editingGuestId = null;
+    let currentGuestFilter = 'todos';
+
+    const formatBRL = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
+
+    function loadData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                appData = JSON.parse(saved);
+                if (!appData.guests) appData.guests = [];
+            } catch (e) { initDefaultData(); }
+        } else { initDefaultData(); }
+    }
+
+    function initDefaultData() {
+        const buffet = {
+            id: 1, name: "🍽️ Buffet + Decoração", total: 13500, installments: []
+        };
+        for (let i = 1; i <= 4; i++) {
+            buffet.installments.push({ id: i, title: `Parcela 0${i} (Entrada)`, value: 1012.50, felipe: 506.25, beatriz: 506.25, status: 'pending' });
+        }
+        for (let i = 5; i <= 16; i++) {
+            let num = i < 10 ? `0${i}` : i;
+            buffet.installments.push({ id: i, title: `Parcela ${num} (Saldo)`, value: 787.50, felipe: 393.75, beatriz: 393.75, status: 'pending' });
+        }
+
+        appData.suppliers = [buffet];
+        appData.goals = [
+            { id: 1, text: "Contratar Buffet e Decoração", done: true },
+            { id: 2, text: "Definir trajes dos noivos", done: false },
+            { id: 3, text: "Enviar convites dos Padrinhos", done: false }
+        ];
+        appData.guests = [
+            { id: 1, name: "Lucas Andrade", role: "Padrinho", status: "confirmado" },
+            { id: 2, name: "Camila Ribeiro", role: "Madrinha", status: "confirmado" },
+            { id: 3, name: "Carlos Eduardo", role: "Convidado", status: "pendente" }
+        ];
+        saveData();
+    }
+
+    function updateUI() {
+        let globalTotal = 0, globalPaid = 0, globalFelipe = 0, globalBeatriz = 0;
+        appData.suppliers.forEach(sup => {
+            globalTotal += sup.total;
+            sup.installments.forEach(inst => {
+                if (inst.status === 'paid') {
+                    globalPaid += inst.value;
+                    globalFelipe += inst.felipe;
+                    globalBeatriz += inst.beatriz;
+                }
+            });
+        });
+
+        let percent = globalTotal > 0 ? (globalPaid / globalTotal) * 100 : 0;
+        let globalRemaining = globalTotal - globalPaid;
+
+        document.getElementById('dash-total').innerText = formatBRL(globalTotal);
+        document.getElementById('dash-pago').innerText = formatBRL(globalPaid);
+        document.getElementById('dash-pendente').innerText = formatBRL(globalRemaining);
+        document.getElementById('dash-paid-text').innerText = `${formatBRL(globalPaid)} pagos`;
+        document.getElementById('dash-percent').innerText = `${percent.toFixed(0)}% concluído`;
+        document.getElementById('dash-bar-main').style.width = `${percent}%`;
+        document.getElementById('dash-felipe').innerText = formatBRL(globalFelipe);
+        document.getElementById('dash-beatriz').innerText = formatBRL(globalBeatriz);
+
+        const totalGuests = appData.guests.length;
+        const confirmedGuests = appData.guests.filter(g => g.status === 'confirmado').length;
+        const pendingGuests = appData.guests.filter(g => g.status === 'pendente').length;
+        const vipGuests = appData.guests.filter(g => g.role === 'Padrinho' || g.role === 'Madrinha').length;
+
+        document.getElementById('dash-guest-total').innerText = totalGuests;
+        document.getElementById('dash-guest-confirmed').innerText = confirmedGuests;
+        document.getElementById('dash-guest-pending').innerText = pendingGuests;
+        document.getElementById('dash-guest-vip').innerText = vipGuests;
+
+        renderSuppliersList();
+        renderGuestsList();
+        renderGoals();
+
+        if (currentSupplierId !== null) renderSupplierDetails(currentSupplierId);
+    }
+
+    /* FORNECEDORES */
+    function renderSuppliersList() {
+        const container = document.getElementById('suppliers-list');
+        container.innerHTML = '';
+        
+        if (appData.suppliers.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 10px 0;">Nenhum fornecedor cadastrado.</p>';
+            return;
+        }
+
+        appData.suppliers.forEach(sup => {
+            let paidAmount = sup.installments.reduce((acc, inst) => inst.status === 'paid' ? acc + inst.value : acc, 0);
+            let percent = sup.total > 0 ? (paidAmount / sup.total) * 100 : 0;
+
+            const div = document.createElement('div');
+            div.className = 'supplier-item';
+            div.onclick = () => openSupplierDetails(sup.id);
+            div.innerHTML = `
+                <div class="supplier-info">
+                    <h4>${sup.name}</h4>
+                    <p>Total: ${formatBRL(sup.total)} | <span style="color: ${percent === 100 ? 'var(--verde-sucesso)' : '#777'}">${percent.toFixed(0)}% pago</span></p>
+                </div>
+                <button class="btn-detalhes">Ver →</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function openSupplierDetails(id) {
+        currentSupplierId = id;
+        renderSupplierDetails(id);
+        document.getElementById('view-fornecedores').classList.remove('active');
+        document.getElementById('view-detalhes').classList.add('active');
+    }
+
+    function renderSupplierDetails(id) {
+        const sup = appData.suppliers.find(s => s.id === id);
+        if (!sup) { closeSupplierDetails(); return; }
+
+        let paidAmount = sup.installments.reduce((acc, inst) => inst.status === 'paid' ? acc + inst.value : acc, 0);
+        let percent = sup.total > 0 ? (paidAmount / sup.total) * 100 : 0;
+        let remaining = sup.total - paidAmount;
+
+        document.getElementById('det-name').innerText = sup.name;
+        document.getElementById('det-total').innerText = `Valor contratado: ${formatBRL(sup.total)}`;
+        document.getElementById('sup-paid-text').innerText = `${formatBRL(paidAmount)} pagos`;
+        document.getElementById('sup-rest-text').innerText = `Restante: ${formatBRL(remaining)}`;
+        document.getElementById('sup-bar').style.width = `${percent}%`;
+
+        const container = document.getElementById('installments-container');
+        container.innerHTML = '';
+        
+        sup.installments.forEach((inst, index) => {
+            const isPaid = inst.status === 'paid';
+            const div = document.createElement('div');
+            div.className = `installment-item ${isPaid ? 'paid' : ''}`;
+            div.innerHTML = `
+                <div class="installment-details">
+                    <h5>${inst.title}</h5>
+                    <p>Fe/Be: ${formatBRL(inst.felipe)} cada</p>
+                </div>
+                <div class="installment-action">
+                    <span class="price-tag">${formatBRL(inst.value)}</span>
+                    <div class="check-btn" onclick="togglePayment(${sup.id}, ${index})">
+                        ${isPaid ? '✓' : ''}
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function closeSupplierDetails() {
+        currentSupplierId = null;
+        document.getElementById('view-detalhes').classList.remove('active');
+        document.getElementById('view-fornecedores').classList.add('active');
+    }
+
+    function togglePayment(supplierId, installmentIndex) {
+        const sup = appData.suppliers.find(s => s.id === supplierId);
+        if (sup) {
+            let status = sup.installments[installmentIndex].status;
+            sup.installments[installmentIndex].status = status === 'pending' ? 'paid' : 'pending';
+            saveData();
+            updateUI();
+        }
+    }
+
+    function deleteCurrentSupplier() {
+        if (currentSupplierId === null) return;
+        if (confirm("Tem certeza que deseja excluir este fornecedor?")) {
+            appData.suppliers = appData.suppliers.filter(s => s.id !== currentSupplierId);
+            saveData();
+            closeSupplierDetails();
+            updateUI();
+        }
+    }
+
+    // Preparar Modal para Editar Fornecedor
+    function editCurrentSupplier() {
+        const sup = appData.suppliers.find(s => s.id === currentSupplierId);
+        if (!sup) return;
+
+        document.getElementById('modal-fornecedor-title').innerText = "Editar Fornecedor";
+        document.getElementById('input-sup-name').value = sup.name;
+        document.getElementById('input-sup-value').value = sup.total;
+        document.getElementById('input-sup-installments').value = sup.installments.length;
+        
+        editingSupplierId = sup.id;
+        openModal('modal-fornecedor');
+    }
+
+    function saveSupplier() {
+        const name = document.getElementById('input-sup-name').value.trim() || 'Novo Fornecedor';
+        const total = parseFloat(document.getElementById('input-sup-value').value) || 0;
+        const instCount = parseInt(document.getElementById('input-sup-installments').value) || 1;
+
+        if (total <= 0) { alert("Insira um valor válido!"); return; }
+
+        if (editingSupplierId) {
+            // Modo Edição
+            let sup = appData.suppliers.find(s => s.id === editingSupplierId);
+            sup.name = name;
+            
+            // Se mudou o valor ou parcelas, refaz as contas e reseta os pagamentos
+            if (sup.total !== total || sup.installments.length !== instCount) {
+                if(!confirm("Ao alterar o Valor ou a Quantidade de Parcelas, o histórico de pagamentos deste fornecedor será zerado. Deseja continuar?")) {
+                    return;
+                }
+                sup.total = total;
+                sup.installments = [];
+                const instValue = total / instCount;
+                for (let i = 1; i <= instCount; i++) {
+                    let num = i < 10 ? `0${i}` : i;
+                    sup.installments.push({
+                        id: i, title: `Parcela ${num}`, value: instValue, felipe: instValue / 2, beatriz: instValue / 2, status: 'pending'
+                    });
+                }
+            }
+        } else {
+            // Modo Criação
+            const newSup = { id: Date.now(), name: name, total: total, installments: [] };
+            const instValue = total / instCount;
+            for (let i = 1; i <= instCount; i++) {
+                let num = i < 10 ? `0${i}` : i;
+                newSup.installments.push({
+                    id: i, title: `Parcela ${num}`, value: instValue, felipe: instValue / 2, beatriz: instValue / 2, status: 'pending'
+                });
+            }
+            appData.suppliers.push(newSup);
+        }
+
+        saveData();
+        updateUI();
+        closeModal('modal-fornecedor');
+    }
+
+    /* CONVIDADOS */
+    function filterGuests(filter, element) {
+        currentGuestFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (element) element.classList.add('active');
+        renderGuestsList();
+    }
+
+    function renderGuestsList() {
+        const container = document.getElementById('guests-list');
+        container.innerHTML = '';
+
+        let filtered = appData.guests;
+        if (currentGuestFilter === 'confirmados') filtered = appData.guests.filter(g => g.status === 'confirmado');
+        else if (currentGuestFilter === 'pendentes') filtered = appData.guests.filter(g => g.status === 'pendente');
+        else if (currentGuestFilter === 'padrinhos') filtered = appData.guests.filter(g => g.role === 'Padrinho' || g.role === 'Madrinha');
+
+        document.getElementById('guest-count-badge').innerText = `${filtered.length} convidado(s)`;
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 15px 0;">Nenhum convidado nesta categoria.</p>';
+            return;
+        }
+
+        filtered.forEach(guest => {
+            let badgeClass = 'badge-convidado';
+            if (guest.role === 'Padrinho') badgeClass = 'badge-padrinho';
+            if (guest.role === 'Madrinha') badgeClass = 'badge-madrinha';
+
+            let statusClass = 'status-pendente';
+            let statusText = '⏳ Pendente';
+            if (guest.status === 'confirmado') { statusClass = 'status-confirmado'; statusText = '✅ Confirmado'; }
+            if (guest.status === 'recusado') { statusClass = 'status-recusado'; statusText = '❌ Ausente'; }
+
+            const div = document.createElement('div');
+            div.className = 'guest-item';
+            div.innerHTML = `
+                <div class="guest-info">
+                    <h4>${guest.name} <span class="badge ${badgeClass}">${guest.role}</span></h4>
+                    <p>Status: <button class="status-tag ${statusClass}" onclick="cycleGuestStatus(${guest.id})">${statusText}</button></p>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-action-icon" onclick="editGuest(${guest.id})">✏️</button>
+                    <button class="btn-action-icon btn-delete-icon" onclick="deleteGuest(${guest.id})">✕</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function cycleGuestStatus(id) {
+        const guest = appData.guests.find(g => g.id === id);
+        if (guest) {
+            if (guest.status === 'pendente') guest.status = 'confirmado';
+            else if (guest.status === 'confirmado') guest.status = 'recusado';
+            else guest.status = 'pendente';
+            saveData();
+            updateUI();
+        }
+    }
+
+    // Preparar Modal para Editar Convidado
+    function editGuest(id) {
+        const guest = appData.guests.find(g => g.id === id);
+        if (!guest) return;
+
+        document.getElementById('modal-convidado-title').innerText = "Editar Convidado";
+        document.getElementById('input-guest-name').value = guest.name;
+        document.getElementById('input-guest-role').value = guest.role;
+        document.getElementById('input-guest-status').value = guest.status;
+        
+        editingGuestId = id;
+        openModal('modal-convidado');
+    }
+
+    function saveGuest() {
+        const name = document.getElementById('input-guest-name').value.trim();
+        const role = document.getElementById('input-guest-role').value;
+        const status = document.getElementById('input-guest-status').value;
+
+        if (name === '') { alert("Insira o nome do convidado!"); return; }
+
+        if (editingGuestId) {
+            // Atualiza convidado existente
+            let guest = appData.guests.find(g => g.id === editingGuestId);
+            guest.name = name;
+            guest.role = role;
+            guest.status = status;
+        } else {
+            // Cria novo convidado
+            appData.guests.push({ id: Date.now(), name: name, role: role, status: status });
+        }
+
+        saveData();
+        updateUI();
+        closeModal('modal-convidado');
+    }
+
+    function deleteGuest(id) {
+        appData.guests = appData.guests.filter(g => g.id !== id);
+        saveData();
+        updateUI();
+    }
+
+    /* METAS */
+    function renderGoals() {
+        const container = document.getElementById('goals-container');
+        container.innerHTML = '';
+        if (appData.goals.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #999; font-size: 13px; padding: 10px 0;">Nenhuma meta cadastrada.</p>';
+            return;
+        }
+        appData.goals.forEach((goal) => {
+            const div = document.createElement('div');
+            div.className = `goal-item ${goal.done ? 'done' : ''}`;
+            div.innerHTML = `
+                <div class="goal-left" onclick="toggleGoal(${goal.id})">
+                    <div class="goal-check">${goal.done ? '✓' : ''}</div>
+                    <div class="goal-text">${goal.text}</div>
+                </div>
+                <button class="btn-action-icon btn-delete-icon" onclick="deleteGoal(${goal.id})">✕</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function toggleGoal(id) {
+        const goal = appData.goals.find(g => g.id === id);
+        if (goal) { goal.done = !goal.done; saveData(); renderGoals(); }
+    }
+
+    function deleteGoal(id) {
+        appData.goals = appData.goals.filter(g => g.id !== id);
+        saveData(); renderGoals();
+    }
+
+    function saveGoal() {
+        const text = document.getElementById('input-goal-desc').value.trim();
+        if (text !== '') {
+            appData.goals.push({ id: Date.now(), text: text, done: false });
+            saveData(); renderGoals();
+        }
+        closeModal('modal-meta');
+    }
+
+    /* NAVEGAÇÃO E MODAIS */
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    
+    function closeModal(id) { 
+        document.getElementById(id).classList.remove('active'); 
+        
+        // Limpar inputs e resetar modo de edição sempre que um modal for fechado
+        if (id === 'modal-convidado') {
+            editingGuestId = null;
+            document.getElementById('modal-convidado-title').innerText = "Novo Convidado";
+            document.getElementById('input-guest-name').value = '';
+            document.getElementById('input-guest-role').value = 'Convidado';
+            document.getElementById('input-guest-status').value = 'pendente';
+        } else if (id === 'modal-fornecedor') {
+            editingSupplierId = null;
+            document.getElementById('modal-fornecedor-title').innerText = "Novo Fornecedor";
+            document.getElementById('input-sup-name').value = '';
+            document.getElementById('input-sup-value').value = '';
+            document.getElementById('input-sup-installments').value = '';
+        } else if (id === 'modal-meta') {
+            document.getElementById('input-goal-desc').value = '';
+        }
+    }
+
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if (element) element.classList.add('active');
+        currentSupplierId = null;
+    }
+
+    /* INICIALIZAÇÃO */
+    loadData();
+    updateUI();
+</script>
+
+</body>
+</html>
